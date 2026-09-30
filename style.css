@@ -1,0 +1,1032 @@
+/* ==========================================================================
+   RESET & SYSTEM TOKENS
+   ========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: #eef2ff;
+    --success: #16a34a;
+    --success-hover: #15803d;
+    --whatsapp: #25d366;
+    --whatsapp-hover: #128c7e;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --danger-light: #fef2f2;
+    --surface: #ffffff;
+    --surface-subtle: #f8fafc;
+    --surface-border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'Space Mono', 'Courier Prime', 'Courier New', Courier, monospace;
+}
+
+body {
+    font-family: var(--font-ui);
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   APP HEADER & NAVIGATION
+   ========================================================================== */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #0f172a;
+    color: #f8fafc;
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon {
+    font-size: 26px;
+    background: rgba(255, 255, 255, 0.08);
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.brand-info h1 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.badge-pro {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: #ffffff;
+}
+
+.header-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.control-item label {
+    font-weight: 500;
+}
+
+select {
+    padding: 7px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+}
+
+select:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+/* Segmented Control (58mm / 80mm) */
+.segmented-control {
+    display: inline-flex;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: var(--radius-sm);
+    padding: 2px;
+}
+
+.seg-btn {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.seg-btn.active {
+    background: #4f46e5;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Tombol Universal */
+.btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.btn-whatsapp {
+    background: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+}
+
+.btn-whatsapp:hover {
+    background: #15803d;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #cbd5e1;
+    border: 1px solid #334155;
+}
+
+.btn-ghost:hover {
+    background: #1e293b;
+    color: #ffffff;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-xs {
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.btn-outline:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+/* Mobile Tab Switcher */
+.mobile-tab-bar {
+    display: none;
+    width: 100%;
+    border-top: 1px solid #1e293b;
+    background: #0f172a;
+}
+
+.mobile-tab {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+}
+
+.mobile-tab.active {
+    color: #818cf8;
+    border-bottom: 2px solid #818cf8;
+    background: rgba(129, 140, 248, 0.08);
+}
+
+/* ==========================================================================
+   MAIN LAYOUT (SPLIT VIEW)
+   ========================================================================== */
+.app-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex: 1;
+    gap: 24px;
+    padding: 24px 20px;
+}
+
+/* LEFT COLUMN: FORM EDITOR */
+.editor-pane {
+    flex: 1;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.editor-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 6px;
+}
+
+.editor-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.editor-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+.toggle-switch .slider {
+    width: 32px;
+    height: 18px;
+    background-color: #cbd5e1;
+    border-radius: 20px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.toggle-switch .slider::before {
+    content: "";
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: var(--primary);
+}
+
+.toggle-switch input:checked + .slider::before {
+    transform: translateX(14px);
+}
+
+/* EDITOR CARDS */
+.editor-card {
+    background: #ffffff;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.editor-card:hover {
+    border-color: #cbd5e1;
+}
+
+.card-title, .card-title-between {
+    padding: 12px 18px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--surface-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title-between {
+    justify-content: space-between;
+}
+
+.card-icon {
+    font-size: 16px;
+}
+
+.card-title h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.card-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* FORM CONTROLS */
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.col-12 { flex: 0 0 100%; width: 100%; }
+.col-6 { flex: 1; }
+.col-4 { flex: 1; }
+.col-3 { flex: 1; }
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.label-with-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    font-size: 11px;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-text:hover {
+    text-decoration: underline;
+}
+
+.editor-pane input[type="text"],
+.editor-pane input[type="number"],
+.editor-pane select,
+.editor-pane textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: var(--font-ui);
+    color: #1e293b;
+    background: #ffffff;
+    transition: all 0.15s ease;
+    outline: none;
+}
+
+.editor-pane input:focus,
+.editor-pane select:focus,
+.editor-pane textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #334155;
+}
+
+.custom-checkbox input {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+}
+
+/* DYNAMIC ITEMS & IMEI EDITOR */
+.items-editor-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-editor-card {
+    background: var(--surface-subtle);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    transition: border-color 0.15s ease;
+}
+
+.item-editor-card:hover {
+    border-color: #cbd5e1;
+}
+
+.item-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #e2e8f0;
+    padding-bottom: 6px;
+}
+
+.item-badge-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.btn-remove-item {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+}
+
+.btn-remove-item:hover {
+    color: var(--danger);
+}
+
+/* IMEI Manager Inside Item */
+.imei-manager {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-sm);
+    padding: 10px;
+}
+
+.imei-manager-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.imei-manager-header label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.imei-chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    min-height: 24px;
+}
+
+.imei-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.imei-chip-delete {
+    cursor: pointer;
+    color: #94a3b8;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.imei-chip-delete:hover {
+    color: var(--danger);
+}
+
+.imei-add-row {
+    display: flex;
+    gap: 6px;
+}
+
+.imei-add-row input {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 6px 8px;
+}
+
+/* ==========================================================================
+   RIGHT COLUMN: LIVE RECEIPT PREVIEW
+   ========================================================================== */
+.preview-pane {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #f1f5f9;
+    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+    background-size: 20px 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    min-height: calc(100vh - 120px);
+}
+
+.preview-sticky-wrap {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.preview-toolbar {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.preview-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.meta-label {
+    font-weight: 600;
+    color: #334155;
+}
+
+.meta-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* REALISTIC RECEIPT PAPER */
+.receipt-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Jagged Paper Tear Effect */
+.receipt-tear-top, .receipt-tear-bottom {
+    width: 100%;
+    height: 6px;
+    background-size: 10px 6px;
+    background-repeat: repeat-x;
+}
+
+.receipt-tear-top {
+    background-image: linear-gradient(135deg, transparent 4px, #ffffff 4px),
+                      linear-gradient(-135deg, transparent 4px, #ffffff 4px);
+    margin-bottom: -1px;
+}
+
+.receipt-tear-bottom {
+    background-image: linear-gradient(45deg, transparent 4px, #ffffff 4px),
+                      linear-gradient(-45deg, transparent 4px, #ffffff 4px);
+    margin-top: -1px;
+}
+
+.receipt-paper {
+    background: #ffffff;
+    color: #000000;
+    font-family: var(--font-mono);
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    line-height: 1.35;
+    transition: width 0.2s ease;
+    word-break: break-word;
+}
+
+/* Paper Sizes */
+.receipt-paper.w-58 {
+    width: 58mm;
+    max-width: 58mm;
+    padding: 5mm 4mm;
+    font-size: 10px;
+}
+
+.receipt-paper.w-80 {
+    width: 80mm;
+    max-width: 80mm;
+    padding: 6mm 6mm;
+    font-size: 11.5px;
+}
+
+/* ==========================================================================
+   RECEIPT TEMPLATE TYPOGRAPHY & LAYOUT
+   ========================================================================== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.font-bold { font-weight: 700; }
+.text-muted { color: #333333; }
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.receipt-divider-dash {
+    border-top: 1px dashed #000000;
+    margin: 8px 0;
+}
+
+.receipt-divider-space {
+    height: 10px;
+}
+
+/* T-MOBILE SPECIALIZED TEMPLATE */
+.tmobile-receipt {
+    display: flex;
+    flex-direction: column;
+}
+
+.tmobile-receipt .store-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
+
+.tmobile-receipt .store-meta {
+    font-size: 10.5px;
+    line-height: 1.35;
+}
+
+.tmobile-receipt .bill-info {
+    margin: 10px 0;
+    line-height: 1.45;
+}
+
+.tmobile-receipt .table-header-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    border-top: 1px dashed #000000;
+    border-bottom: 1px dashed #000000;
+    padding: 5px 0;
+    margin: 6px 0;
+}
+
+.tmobile-receipt .col-product { flex: 1; text-align: left; }
+.tmobile-receipt .col-qty { width: 34px; text-align: center; }
+.tmobile-receipt .col-total { width: 80px; text-align: right; }
+
+.tmobile-receipt .receipt-item {
+    padding: 6px 0;
+}
+
+.tmobile-receipt .item-main-row {
+    font-weight: 700;
+}
+
+.tmobile-receipt .item-spec {
+    font-size: 10.5px;
+    color: #111111;
+    margin-top: 1px;
+}
+
+.tmobile-receipt .item-imei {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.tmobile-receipt .total-row {
+    font-size: 12.5px;
+    padding: 2px 0;
+}
+
+.tmobile-receipt .payment-details {
+    line-height: 1.45;
+    margin: 4px 0;
+}
+
+.tmobile-receipt .receipt-footer {
+    margin-top: 10px;
+}
+
+.tmobile-receipt .footer-msg {
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.receipt-barcode-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0 2px 0;
+    overflow: hidden;
+}
+
+.barcode-canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Inline Edit Highlight */
+.inline-editable-active [contenteditable="true"] {
+    outline: 1px dashed #6366f1 !important;
+    background-color: rgba(99, 102, 241, 0.05);
+    cursor: text;
+    border-radius: 2px;
+}
+
+.inline-editable-active [contenteditable="true"]:focus {
+    outline: 2px solid #4f46e5 !important;
+    background-color: rgba(99, 102, 241, 0.12);
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .app-container {
+        flex-direction: column;
+        padding: 16px 12px;
+    }
+
+    .editor-pane {
+        max-width: 100%;
+    }
+
+    .preview-sticky-wrap {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 14px;
+    }
+
+    .header-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .header-actions {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .mobile-tab-bar {
+        display: flex;
+    }
+
+    .editor-pane.tab-hidden,
+    .preview-pane.tab-hidden {
+        display: none !important;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .col-6, .col-4, .col-3 {
+        width: 100%;
+        flex: 0 0 100%;
+    }
+}
+
+/* ==========================================================================
+   ATURAN CETAK FISIK (@media print)
+   ========================================================================== */
+@media print {
+    html, body {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hilangkan semua elemen UI, header, editor, preview toolbar, background */
+    .no-print,
+    .app-header,
+    .editor-pane,
+    .preview-toolbar,
+    .receipt-tear-top,
+    .receipt-tear-bottom,
+    .toast {
+        display: none !important;
+    }
+
+    .app-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .preview-pane {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    .preview-sticky-wrap {
+        position: static !important;
+        width: 100% !important;
+    }
+
+    .receipt-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    .receipt-paper {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 2mm 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        color: #000000 !important;
+    }
+
+    @page {
+        margin: 0mm;
+        size: auto;
+    }
+}

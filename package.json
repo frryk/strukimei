@@ -1,0 +1,19 @@
+{
+  "name": "strukimei",
+  "version": "1.0.0",
+  "description": "Aplikasi Cetak & Edit Struk Kasir / POS Handphone & IMEI",
+  "scripts": {
+    "start": "npx -y serve -l 3000 .",
+    "dev": "npx -y serve -l 3000 ."
+  },
+  "keywords": [
+    "pos",
+    "receipt",
+    "thermal-printer",
+    "esc-pos",
+    "struk",
+    "imei"
+  ],
+  "author": "",
+  "license": "ISC"
+}
