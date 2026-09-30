@@ -740,14 +740,15 @@ select:focus {
 .receipt-paper.w-58 {
     width: 58mm;
     max-width: 58mm;
-    padding: 5mm 4mm;
-    font-size: 10px;
+    padding: 4mm 3mm 6mm 3mm;
+    font-size: 9.5px;
+    letter-spacing: -0.2px;
 }
 
 .receipt-paper.w-80 {
     width: 80mm;
     max-width: 80mm;
-    padding: 6mm 6mm;
+    padding: 6mm 6mm 8mm 6mm;
     font-size: 11.5px;
 }
 
@@ -796,7 +797,7 @@ select:focus {
 }
 
 .tmobile-receipt .bill-info {
-    margin: 10px 0;
+    margin: 8px 0;
     line-height: 1.45;
 }
 
@@ -806,16 +807,32 @@ select:focus {
     font-weight: 700;
     border-top: 1px dashed #000000;
     border-bottom: 1px dashed #000000;
-    padding: 5px 0;
+    padding: 4px 0;
     margin: 6px 0;
 }
 
-.tmobile-receipt .col-product { flex: 1; text-align: left; }
-.tmobile-receipt .col-qty { width: 34px; text-align: center; }
-.tmobile-receipt .col-total { width: 80px; text-align: right; }
+.tmobile-receipt .col-product { 
+    flex: 1; 
+    text-align: left;
+    min-width: 0;
+    word-break: break-word;
+}
+
+.tmobile-receipt .col-qty { 
+    width: 32px; 
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.tmobile-receipt .col-total { 
+    width: 65px; 
+    text-align: right;
+    flex-shrink: 0;
+    padding-right: 2px;
+}
 
 .tmobile-receipt .receipt-item {
-    padding: 6px 0;
+    padding: 5px 0;
 }
 
 .tmobile-receipt .item-main-row {
@@ -823,35 +840,65 @@ select:focus {
 }
 
 .tmobile-receipt .item-spec {
-    font-size: 10.5px;
+    font-size: 10px;
     color: #111111;
     margin-top: 1px;
 }
 
 .tmobile-receipt .item-imei {
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     margin-top: 2px;
 }
 
 .tmobile-receipt .total-row {
-    font-size: 12.5px;
-    padding: 2px 0;
+    font-size: 12px;
+    padding: 2px 2px 2px 0;
 }
 
 .tmobile-receipt .payment-details {
     line-height: 1.45;
     margin: 4px 0;
+    padding-right: 2px;
 }
 
 .tmobile-receipt .receipt-footer {
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .tmobile-receipt .footer-msg {
     font-size: 11px;
     margin-bottom: 6px;
+}
+
+/* Penyesuaian Presisi untuk Ukuran Kertas 58mm */
+.receipt-paper.w-58 .tmobile-receipt .store-title {
+    font-size: 13.5px;
+}
+
+.receipt-paper.w-58 .tmobile-receipt .store-meta,
+.receipt-paper.w-58 .tmobile-receipt .item-spec,
+.receipt-paper.w-58 .tmobile-receipt .item-imei {
+    font-size: 9px;
+    letter-spacing: 0;
+}
+
+.receipt-paper.w-58 .tmobile-receipt .col-qty {
+    width: 24px;
+}
+
+.receipt-paper.w-58 .tmobile-receipt .col-total {
+    width: 56px;
+    padding-right: 2px;
+}
+
+.receipt-paper.w-58 .tmobile-receipt .total-row {
+    font-size: 11px;
+}
+
+.receipt-paper.w-58 .tmobile-receipt .footer-msg {
+    font-size: 9.5px;
 }
 
 .receipt-barcode-wrap {
@@ -1019,10 +1066,45 @@ select:focus {
     .receipt-paper {
         box-shadow: none !important;
         border-radius: 0 !important;
-        padding: 2mm 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
         color: #000000 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Kertas 58mm: Lebar cetak head fisik printer 58mm adalah 48mm */
+    .receipt-paper.w-58 {
+        width: 48mm !important;
+        max-width: 48mm !important;
+        padding: 1mm 2mm 3mm 1mm !important;
+        margin: 0 auto !important;
+        font-size: 9px !important;
+    }
+
+    .receipt-paper.w-58 .tmobile-receipt .col-qty {
+        width: 22px !important;
+    }
+
+    .receipt-paper.w-58 .tmobile-receipt .col-total {
+        width: 52px !important;
+        padding-right: 2px !important;
+    }
+
+    .receipt-paper.w-58 .tmobile-receipt .store-title {
+        font-size: 13px !important;
+    }
+
+    .receipt-paper.w-58 .tmobile-receipt .store-meta,
+    .receipt-paper.w-58 .tmobile-receipt .item-spec,
+    .receipt-paper.w-58 .tmobile-receipt .item-imei {
+        font-size: 8.5px !important;
+    }
+
+    /* Kertas 80mm: Lebar cetak head fisik printer 80mm adalah 72mm */
+    .receipt-paper.w-80 {
+        width: 72mm !important;
+        max-width: 72mm !important;
+        padding: 2mm 3mm 4mm 3mm !important;
+        margin: 0 auto !important;
+        font-size: 11px !important;
     }
 
     @page {

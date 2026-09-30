@@ -377,14 +377,14 @@ function renderBarcode() {
         if (typeof JsBarcode === 'function') {
             JsBarcode(canvas, code, {
                 format: "CODE128",
-                width: receiptData.paperWidth === 'w-58' ? 1.4 : 1.7,
-                height: receiptData.paperWidth === 'w-58' ? 36 : 44,
+                width: receiptData.paperWidth === 'w-58' ? 1.2 : 1.7,
+                height: receiptData.paperWidth === 'w-58' ? 32 : 44,
                 displayValue: true,
                 text: code,
                 font: "Space Mono, Courier New, monospace",
-                fontSize: 11,
-                textMargin: 3,
-                margin: 4,
+                fontSize: receiptData.paperWidth === 'w-58' ? 10 : 11,
+                textMargin: 2,
+                margin: 2,
                 background: "#ffffff",
                 lineColor: "#000000"
             });
@@ -417,9 +417,9 @@ function drawFallbackBarcode(canvas, rawCode) {
     const encoded = '*' + cleanCode + '*';
     const ctx = canvas.getContext('2d');
     const isNarrow = receiptData.paperWidth === 'w-58';
-    const narrowW = isNarrow ? 1.3 : 1.7;
-    const wideW = isNarrow ? 3.2 : 4.0;
-    const barH = isNarrow ? 34 : 42;
+    const narrowW = isNarrow ? 1.0 : 1.7;
+    const wideW = isNarrow ? 2.4 : 4.0;
+    const barH = isNarrow ? 28 : 42;
 
     let totalWidth = 20;
     for (let i = 0; i < encoded.length; i++) {
@@ -896,11 +896,26 @@ async function handlePrint() {
         // Metode 2 & 3: Direct ESC/POS via USB atau Bluetooth
         try {
             showToast("Mempersiapkan data cetak thermal...");
-            const canvas = await html2canvas(container, {
+            const is58 = receiptData.paperWidth === 'w-58';
+            // Standar dot printer thermal fisik: 58mm = 384 dots, 80mm = 576 dots
+            const targetDotWidth = is58 ? 384 : 576;
+
+            const rawCanvas = await html2canvas(container, {
                 scale: 2,
                 backgroundColor: '#ffffff',
                 useCORS: true
             });
+
+            // Rescale tepat ke lebar targetDotWidth agar buffer ESC/POS printer tidak terpotong di tepi kanan!
+            const canvas = document.createElement('canvas');
+            canvas.width = targetDotWidth;
+            const scaleFactor = targetDotWidth / rawCanvas.width;
+            canvas.height = Math.round(rawCanvas.height * scaleFactor);
+
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(rawCanvas, 0, 0, canvas.width, canvas.height);
 
             let connected = false;
             if (method === 'usb') {
