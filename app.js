@@ -121,11 +121,11 @@ const templates = {
             <!-- Daftar Item & IMEI -->
             <div class="items-list">
                 ${data.items.map(item => {
-                    const itemTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
-                    const specsArr = item.specs ? item.specs.split('\n').filter(s => s.trim()) : [];
-                    const imeisArr = item.imeis ? item.imeis.filter(im => im.trim()) : [];
+        const itemTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
+        const specsArr = item.specs ? item.specs.split('\n').filter(s => s.trim()) : [];
+        const imeisArr = item.imeis ? item.imeis.filter(im => im.trim()) : [];
 
-                    return `
+        return `
                         <div class="receipt-item">
                             <div class="item-main-row flex-between">
                                 <span class="col-product font-bold">${escapeHtml(item.name)}</span>
@@ -140,7 +140,7 @@ const templates = {
                             `).join('')}
                         </div>
                     `;
-                }).join('')}
+    }).join('')}
             </div>
 
             <div class="receipt-divider-dash"></div>
@@ -559,7 +559,7 @@ function renderItemsEditor() {
                 <span class="item-badge-num">Produk #${index + 1}</span>
                 ${receiptData.items.length > 1 ? `
                     <button type="button" class="btn-remove-item" data-index="${index}" title="Hapus produk ini">
-                        🗑️ Hapus
+                        Hapus
                     </button>
                 ` : ''}
             </div>
@@ -595,14 +595,14 @@ function renderItemsEditor() {
                     ${(item.imeis || []).map((imei, imeiIdx) => `
                         <div class="imei-chip">
                             <span>${escapeHtml(imei)}</span>
-                            <span class="imei-chip-delete" data-item-idx="${index}" data-imei-idx="${imeiIdx}" title="Hapus IMEI">✕</span>
+                            <span class="imei-chip-delete" data-item-idx="${index}" data-imei-idx="${imeiIdx}" title="Hapus IMEI">×</span>
                         </div>
                     `).join('')}
                 </div>
                 <div class="imei-add-row">
-                    <input type="text" class="imei-input-add" placeholder="Ketik IMEI lalu tekan Tambah atau Enter..." data-item-idx="${index}">
+                    <input type="text" class="imei-input-add" placeholder="Ketik IMEI lalu tekan Tambah..." data-item-idx="${index}">
                     <button type="button" class="btn-sm btn-secondary btn-add-imei" data-item-idx="${index}">
-                        + Tambah IMEI
+                        +
                     </button>
                 </div>
             </div>
@@ -886,18 +886,183 @@ function applyInlineEditMode() {
 // ==========================================================================
 const printer = new ThermalPrinter();
 
+// Generator Perintah Native ESC/POS (Super Cepat & Huruf Tajam Bebas Kabur)
+function generateESCPosCommands(data, paperWidth = 'w-80') {
+    const is58 = paperWidth === 'w-58';
+    const maxChars = is58 ? 32 : 48; // Standar Font A printer thermal
+    const ESC = 0x1B;
+    const GS = 0x1D;
+
+    let bytes = [];
+
+    function pushText(str = '') {
+        for (let i = 0; i < str.length; i++) {
+            bytes.push(str.charCodeAt(i) & 0xFF);
+        }
+    }
+
+    function pushLine(str = '') {
+        pushText(str);
+        bytes.push(0x0A);
+    }
+
+    function lineBetween(left, right) {
+        const lStr = String(left || '');
+        const rStr = String(right || '');
+        const spaceCount = Math.max(1, maxChars - lStr.length - rStr.length);
+        return lStr + ' '.repeat(spaceCount) + rStr;
+    }
+
+    function tableLine(prod, qty, tot) {
+        const qStr = String(qty || '1');
+        const tStr = String(tot || '');
+        if (is58) {
+            // 58mm: 17 chars product, 3 chars qty, 10 chars total
+            const p = String(prod || '').slice(0, 17).padEnd(17);
+            const q = qStr.padStart(3).slice(0, 3);
+            const t = tStr.padStart(10).slice(0, 10);
+            return p + ' ' + q + ' ' + t;
+        } else {
+            // 80mm: 28 chars product, 5 chars qty, 13 chars total
+            const p = String(prod || '').slice(0, 28).padEnd(28);
+            const q = qStr.padStart(5).slice(0, 5);
+            const t = tStr.padStart(13).slice(0, 13);
+            return p + ' ' + q + ' ' + t;
+        }
+    }
+
+    // Inisialisasi printer & set Font A standar
+    bytes.push(ESC, 0x40); // Reset / Initialize
+    bytes.push(ESC, 0x74, 0x00); // Standard Code Page PC437
+
+    // 1. HEADER TOKO (Rata Tengah)
+    bytes.push(ESC, 0x61, 0x01); // Center
+    bytes.push(ESC, 0x21, 0x10); // Double height font
+    bytes.push(ESC, 0x45, 0x01); // Bold ON
+    pushLine(data.storeName);
+    bytes.push(ESC, 0x21, 0x00); // Normal font
+    bytes.push(ESC, 0x45, 0x00); // Bold OFF
+
+    pushLine(data.rocNo);
+    pushLine(data.address1);
+    pushLine(data.address2);
+    pushLine(`Tel  ${data.storePhone}`);
+    pushLine(`Email ${data.storeEmail}`);
+    pushLine('');
+
+    // 2. DETAIL FAKTUR (Rata Kiri)
+    bytes.push(ESC, 0x61, 0x00); // Left align
+    pushLine(lineBetween('Bill Number', data.billNumber));
+    pushLine(lineBetween(`${data.date}   ${data.time}`, data.cashier));
+
+    // 3. TABEL HEADER
+    const dashedLine = '-'.repeat(maxChars);
+    pushLine(dashedLine);
+    bytes.push(ESC, 0x45, 0x01); // Bold
+    pushLine(tableLine('Product', 'Qty', 'Total'));
+    bytes.push(ESC, 0x45, 0x00); // Bold OFF
+    pushLine(dashedLine);
+
+    // 4. DAFTAR ITEM & IMEI
+    data.items.forEach(item => {
+        const itemTot = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
+        const totStr = `${data.currency}${formatCurrency(itemTot)}`;
+        bytes.push(ESC, 0x45, 0x01); // Bold item name
+        pushLine(tableLine(item.name, item.qty, totStr));
+        bytes.push(ESC, 0x45, 0x00); // Bold OFF
+
+        if (item.specs) {
+            item.specs.split('\n').filter(Boolean).forEach(spec => {
+                pushLine(`  ${spec.trim()}`);
+            });
+        }
+        if (item.imeis && item.imeis.length) {
+            item.imeis.filter(Boolean).forEach(imei => {
+                pushLine(`  IMEI : ${imei.trim()}`);
+            });
+        }
+    });
+
+    // 5. TOTAL
+    pushLine(dashedLine);
+    bytes.push(ESC, 0x45, 0x01); // Bold
+    pushLine(lineBetween('Total', `${data.currency}${formatCurrency(data.total)}`));
+    bytes.push(ESC, 0x45, 0x00);
+    pushLine(dashedLine);
+
+    // 6. RINCIAN PEMBAYARAN & PELANGGAN
+    bytes.push(ESC, 0x45, 0x01);
+    pushLine(lineBetween('Total Amount', `${data.currency}${formatCurrency(data.totalAmount)}`));
+    bytes.push(ESC, 0x45, 0x00);
+    pushLine(lineBetween('Cash', `${data.currency}${formatCurrency(data.cash)}`));
+    pushLine(lineBetween('Customer', data.customerName));
+    pushLine(lineBetween('Balance', `${data.currency}${formatCurrency(data.balance)}`));
+    pushLine(lineBetween('Bill ID', data.billId));
+    pushLine('');
+
+    // 7. FOOTER
+    bytes.push(ESC, 0x61, 0x01); // Center
+    bytes.push(ESC, 0x45, 0x01);
+    pushLine(data.footerText);
+    bytes.push(ESC, 0x45, 0x00);
+    pushLine('');
+
+    // 8. BARCODE BATANG (Hardware Code 128 Engine)
+    if (data.showBarcode && data.billId) {
+        const cleanCode = data.billId.trim();
+        bytes.push(GS, 0x68, is58 ? 40 : 48); // Barcode height
+        bytes.push(GS, 0x77, is58 ? 2 : 3);   // Barcode width
+        bytes.push(GS, 0x48, 0x02);           // Text position below barcode
+        bytes.push(GS, 0x66, 0x00);           // Font A for text
+        // Code 128 format ESC/POS: GS k 73 [len] '{B' [chars...]
+        bytes.push(GS, 0x6B, 0x49, cleanCode.length + 2, 0x7B, 0x42);
+        pushText(cleanCode);
+        pushLine('');
+    }
+
+    // 9. FEED KERTAS & POTONG
+    bytes.push(0x0A, 0x0A, 0x0A);
+    bytes.push(GS, 0x56, 0x41, 0x00); // Cut paper (jika printer ada cutter)
+
+    return bytes;
+}
+
 async function handlePrint() {
     const method = document.getElementById('connection-select').value;
+    const densityVal = parseInt(document.getElementById('density-select')?.value) || 200;
 
     if (method === 'system') {
         // Metode 1: Dialog cetak sistem bawaan browser (stabil di semua OS)
         window.print();
-    } else {
-        // Metode 2 & 3: Direct ESC/POS via USB atau Bluetooth
-        try {
-            showToast("Mempersiapkan data cetak thermal...");
+        return;
+    }
+
+    // Metode 2 & 3: Direct ESC/POS via USB atau Bluetooth
+    try {
+        const isBluetooth = method.startsWith('bluetooth');
+        const isTextMode = method === 'usb-text' || method === 'bluetooth-text';
+
+        let connected = false;
+        if (isBluetooth) {
+            showToast("Menghubungkan printer Bluetooth...");
+            connected = await printer.connectBluetooth();
+        } else {
+            showToast("Menghubungkan printer USB...");
+            connected = await printer.connectUSB();
+        }
+
+        if (!connected) return;
+
+        if (isTextMode) {
+            // Mode Teks ESC/POS: Super cepat (0.3s), 100% tajam, font hardware ROM printer
+            showToast("Mencetak mode Teks ESC/POS...");
+            const commands = generateESCPosCommands(receiptData, receiptData.paperWidth);
+            await printer.printCommands(commands);
+            showToast("Struk berhasil dicetak");
+        } else {
+            // Mode Grafik HD: Menggunakan binarization contrast tinggi (density threshold)
+            showToast("Memproses grafik HD & mencetak...");
             const is58 = receiptData.paperWidth === 'w-58';
-            // Standar dot printer thermal fisik: 58mm = 384 dots, 80mm = 576 dots
             const targetDotWidth = is58 ? 384 : 576;
 
             const rawCanvas = await html2canvas(container, {
@@ -917,21 +1082,12 @@ async function handlePrint() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(rawCanvas, 0, 0, canvas.width, canvas.height);
 
-            let connected = false;
-            if (method === 'usb') {
-                connected = await printer.connectUSB();
-            } else if (method === 'bluetooth') {
-                connected = await printer.connectBluetooth();
-            }
-
-            if (connected) {
-                await printer.printImage(canvas);
-                showToast("Berhasil mencetak ke printer thermal!");
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Gagal cetak: ' + (err.message || err));
+            await printer.printImage(canvas, densityVal);
+            showToast("Struk grafik HD berhasil dicetak");
         }
+    } catch (err) {
+        console.error(err);
+        alert('Gagal cetak: ' + (err.message || err));
     }
 }
 
@@ -943,7 +1099,7 @@ if (quickPrintBtn) quickPrintBtn.addEventListener('click', handlePrint);
 // Tombol Simpan Gambar PNG
 document.getElementById('btn-save-img').addEventListener('click', async () => {
     try {
-        showToast("Membuat gambar resolusi tinggi...");
+        showToast("Membuat gambar...");
         const canvas = await html2canvas(container, {
             scale: 2,
             backgroundColor: '#ffffff',
@@ -955,7 +1111,7 @@ document.getElementById('btn-save-img').addEventListener('click', async () => {
         a.download = filename;
         a.href = canvas.toDataURL('image/png');
         a.click();
-        showToast(`Gambar ${filename} berhasil diunduh!`);
+        showToast(`Gambar ${filename} berhasil diunduh`);
     } catch (e) {
         console.error("Gagal simpan gambar:", e);
         alert("Gagal menyimpan gambar: " + e.message);
@@ -966,7 +1122,7 @@ document.getElementById('btn-save-img').addEventListener('click', async () => {
 document.getElementById('btn-copy-text').addEventListener('click', () => {
     const text = generateTextReceipt(receiptData);
     navigator.clipboard.writeText(text).then(() => {
-        showToast("✓ Teks struk berhasil disalin ke clipboard!");
+        showToast("Teks struk berhasil disalin ke clipboard");
     }).catch(() => {
         // Fallback jika permission clipboard dibatasi
         const textarea = document.createElement('textarea');
@@ -975,7 +1131,7 @@ document.getElementById('btn-copy-text').addEventListener('click', () => {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        showToast("✓ Teks struk berhasil disalin!");
+        showToast("Teks struk berhasil disalin");
     });
 });
 

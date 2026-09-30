@@ -1,5 +1,5 @@
 /* ==========================================================================
-   RESET & SYSTEM TOKENS
+   RESET & SYSTEM TOKENS (SIMPLIFIED & CLEAN)
    ========================================================================== */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -8,16 +8,15 @@
 }
 
 :root {
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --primary-light: #eef2ff;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
     --success: #16a34a;
     --success-hover: #15803d;
-    --whatsapp: #25d366;
-    --whatsapp-hover: #128c7e;
+    --whatsapp: #15803d;
+    --whatsapp-hover: #166534;
     --danger: #dc2626;
     --danger-hover: #b91c1c;
-    --danger-light: #fef2f2;
     --surface: #ffffff;
     --surface-subtle: #f8fafc;
     --surface-border: #e2e8f0;
@@ -25,15 +24,15 @@
     --text-muted: #64748b;
     --text-light: #94a3b8;
     --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
     --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: 'Space Mono', 'Courier Prime', 'Courier New', Courier, monospace;
 }
 
 body {
     font-family: var(--font-ui);
-    background-color: #f1f5f9;
+    background-color: #f8fafc;
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
@@ -42,7 +41,7 @@ body {
 }
 
 /* ==========================================================================
-   APP HEADER & NAVIGATION
+   APP HEADER & ORGANIZED TOOLBAR
    ========================================================================== */
 .app-header {
     position: sticky;
@@ -51,65 +50,64 @@ body {
     background: #0f172a;
     color: #f8fafc;
     border-bottom: 1px solid #1e293b;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.header-inner {
+/* Baris 1: Brand & Tombol Aksi */
+.header-main {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 10px 20px;
+    padding: 12px 24px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 16px;
 }
 
 .brand {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
 }
 
-.brand-icon {
-    font-size: 26px;
-    background: rgba(255, 255, 255, 0.08);
-    width: 42px;
-    height: 42px;
+.brand-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+}
+
+.brand-subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.header-actions {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-.brand-info h1 {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    color: #ffffff;
-    line-height: 1.2;
+/* Baris 2: Toolbar Pengaturan */
+.header-toolbar {
+    background: #0b1120;
+    border-top: 1px solid #1e293b;
 }
 
-.badge-pro {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
-    color: #ffffff;
-}
-
-.header-controls {
+.toolbar-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 8px 24px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
 }
 
-.control-item {
+.control-group {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -117,12 +115,14 @@ body {
     color: #cbd5e1;
 }
 
-.control-item label {
+.control-group label {
     font-weight: 500;
+    white-space: nowrap;
 }
 
 select {
-    padding: 7px 12px;
+    padding: 6px 12px;
+    height: 34px;
     border-radius: var(--radius-sm);
     border: 1px solid #334155;
     background: #1e293b;
@@ -131,17 +131,18 @@ select {
     font-weight: 500;
     cursor: pointer;
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.15s ease;
 }
 
 select:focus {
-    border-color: #818cf8;
-    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 }
 
-/* Segmented Control (58mm / 80mm) */
+/* Segmented Control Kertas (58mm / 80mm) */
 .segmented-control {
     display: inline-flex;
+    height: 34px;
     background: #1e293b;
     border: 1px solid #334155;
     border-radius: var(--radius-sm);
@@ -152,29 +153,25 @@ select:focus {
     border: none;
     background: transparent;
     color: #94a3b8;
-    padding: 4px 10px;
+    padding: 0 12px;
     font-size: 12px;
     font-weight: 600;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
 }
 
 .seg-btn.active {
-    background: #4f46e5;
+    background: #2563eb;
     color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Tombol Universal */
+/* TOMBOL UTAMA */
 .btn {
-    padding: 7px 14px;
+    height: 34px;
+    padding: 0 14px;
     border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 600;
@@ -182,18 +179,18 @@ select:focus {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
     transition: all 0.15s ease;
+    white-space: nowrap;
 }
 
 .btn:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
 }
 
 .btn-primary {
-    background: #4f46e5;
+    background: #2563eb;
     color: #ffffff;
-    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
 }
 
 .btn-primary:hover {
@@ -201,23 +198,22 @@ select:focus {
 }
 
 .btn-secondary {
-    background: #334155;
+    background: #1e293b;
     color: #f8fafc;
-    border: 1px solid #475569;
+    border: 1px solid #334155;
 }
 
 .btn-secondary:hover {
-    background: #475569;
+    background: #334155;
 }
 
 .btn-whatsapp {
-    background: #16a34a;
+    background: #15803d;
     color: #ffffff;
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
 }
 
 .btn-whatsapp:hover {
-    background: #15803d;
+    background: #166534;
 }
 
 .btn-ghost {
@@ -232,7 +228,8 @@ select:focus {
 }
 
 .btn-sm {
-    padding: 5px 10px;
+    height: 28px;
+    padding: 0 10px;
     font-size: 12px;
     font-weight: 600;
     border-radius: var(--radius-sm);
@@ -241,7 +238,8 @@ select:focus {
 }
 
 .btn-xs {
-    padding: 3px 8px;
+    height: 24px;
+    padding: 0 8px;
     font-size: 11px;
     font-weight: 600;
     border-radius: 4px;
@@ -282,9 +280,9 @@ select:focus {
 }
 
 .mobile-tab.active {
-    color: #818cf8;
-    border-bottom: 2px solid #818cf8;
-    background: rgba(129, 140, 248, 0.08);
+    color: #60a5fa;
+    border-bottom: 2px solid #60a5fa;
+    background: rgba(96, 165, 250, 0.08);
 }
 
 /* ==========================================================================
@@ -297,16 +295,16 @@ select:focus {
     display: flex;
     flex: 1;
     gap: 24px;
-    padding: 24px 20px;
+    padding: 20px 24px;
 }
 
 /* LEFT COLUMN: FORM EDITOR */
 .editor-pane {
     flex: 1;
-    max-width: 680px;
+    max-width: 660px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .editor-header {
@@ -315,11 +313,11 @@ select:focus {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding-bottom: 6px;
+    padding-bottom: 4px;
 }
 
 .editor-header h2 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #0f172a;
 }
@@ -327,7 +325,7 @@ select:focus {
 .editor-header-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 /* Toggle Switch */
@@ -378,41 +376,31 @@ select:focus {
 .editor-card {
     background: #ffffff;
     border: 1px solid var(--surface-border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     overflow: hidden;
-    transition: border-color 0.2s;
-}
-
-.editor-card:hover {
-    border-color: #cbd5e1;
 }
 
 .card-title, .card-title-between {
-    padding: 12px 18px;
-    background: #fafafa;
+    padding: 10px 16px;
+    background: #f8fafc;
     border-bottom: 1px solid var(--surface-border);
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
 .card-title-between {
     justify-content: space-between;
 }
 
-.card-icon {
-    font-size: 16px;
-}
-
-.card-title h3 {
-    font-size: 14px;
-    font-weight: 700;
+.card-title h3, .card-title-text h3 {
+    font-size: 13px;
+    font-weight: 600;
     color: #1e293b;
 }
 
 .card-body {
-    padding: 16px 18px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -437,7 +425,7 @@ select:focus {
 
 .form-group label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     color: #475569;
 }
 
@@ -466,22 +454,27 @@ select:focus {
 .editor-pane select,
 .editor-pane textarea {
     width: 100%;
-    padding: 8px 12px;
+    padding: 7px 10px;
+    height: 35px;
     border: 1px solid #cbd5e1;
     border-radius: var(--radius-sm);
     font-size: 13px;
     font-family: var(--font-ui);
     color: #1e293b;
     background: #ffffff;
-    transition: all 0.15s ease;
+    transition: border-color 0.15s ease;
     outline: none;
+}
+
+.editor-pane textarea {
+    height: auto;
 }
 
 .editor-pane input:focus,
 .editor-pane select:focus,
 .editor-pane textarea:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .custom-checkbox {
@@ -508,36 +501,27 @@ select:focus {
 }
 
 .item-editor-card {
-    background: var(--surface-subtle);
+    background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative;
-    transition: border-color 0.15s ease;
-}
-
-.item-editor-card:hover {
-    border-color: #cbd5e1;
 }
 
 .item-editor-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px dashed #e2e8f0;
+    border-bottom: 1px dashed #cbd5e1;
     padding-bottom: 6px;
 }
 
 .item-badge-num {
     font-size: 11px;
-    font-weight: 700;
-    color: var(--primary);
-    background: var(--primary-light);
-    padding: 2px 8px;
-    border-radius: 4px;
+    font-weight: 600;
+    color: #475569;
 }
 
 .btn-remove-item {
@@ -545,10 +529,8 @@ select:focus {
     border: none;
     color: #94a3b8;
     cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
     transition: color 0.15s;
 }
 
@@ -565,18 +547,13 @@ select:focus {
 }
 
 .imei-manager-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 8px;
 }
 
 .imei-manager-header label {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .imei-chips-wrap {
@@ -584,7 +561,7 @@ select:focus {
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 8px;
-    min-height: 24px;
+    min-height: 20px;
 }
 
 .imei-chip {
@@ -596,14 +573,14 @@ select:focus {
     color: #1e293b;
     font-family: var(--font-mono);
     font-size: 11px;
-    padding: 3px 8px;
+    padding: 2px 7px;
     border-radius: 4px;
 }
 
 .imei-chip-delete {
     cursor: pointer;
     color: #94a3b8;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 12px;
 }
 
@@ -619,11 +596,12 @@ select:focus {
 .imei-add-row input {
     font-family: var(--font-mono);
     font-size: 12px;
-    padding: 6px 8px;
+    padding: 5px 8px;
+    height: 30px;
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: LIVE RECEIPT PREVIEW
+   RIGHT COLUMN: LIVE RECEIPT PREVIEW (CLEAN & FLAT)
    ========================================================================== */
 .preview-pane {
     flex: 1;
@@ -631,17 +609,15 @@ select:focus {
     justify-content: center;
     align-items: flex-start;
     background-color: #f1f5f9;
-    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
-    background-size: 20px 20px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     border: 1px solid #e2e8f0;
     padding: 20px;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 140px);
 }
 
 .preview-sticky-wrap {
     position: sticky;
-    top: 90px;
+    top: 110px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -651,15 +627,15 @@ select:focus {
 
 .preview-toolbar {
     width: 100%;
-    max-width: 420px;
+    max-width: 380px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 30px;
-    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .preview-meta {
@@ -667,21 +643,6 @@ select:focus {
     align-items: center;
     gap: 8px;
     font-size: 12px;
-}
-
-.indicator-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
 .meta-label {
@@ -692,13 +653,14 @@ select:focus {
 .meta-badge {
     background: #f1f5f9;
     color: #475569;
-    padding: 2px 6px;
+    padding: 1px 6px;
     border-radius: 4px;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
 }
 
-/* REALISTIC RECEIPT PAPER */
+/* REALISTIC RECEIPT PAPER (CLEAN & CRISP) */
 .receipt-wrapper {
     position: relative;
     display: flex;
@@ -706,34 +668,16 @@ select:focus {
     align-items: center;
 }
 
-/* Jagged Paper Tear Effect */
-.receipt-tear-top, .receipt-tear-bottom {
-    width: 100%;
-    height: 6px;
-    background-size: 10px 6px;
-    background-repeat: repeat-x;
-}
-
-.receipt-tear-top {
-    background-image: linear-gradient(135deg, transparent 4px, #ffffff 4px),
-                      linear-gradient(-135deg, transparent 4px, #ffffff 4px);
-    margin-bottom: -1px;
-}
-
-.receipt-tear-bottom {
-    background-image: linear-gradient(45deg, transparent 4px, #ffffff 4px),
-                      linear-gradient(-45deg, transparent 4px, #ffffff 4px);
-    margin-top: -1px;
-}
-
 .receipt-paper {
     background: #ffffff;
     color: #000000;
     font-family: var(--font-mono);
-    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    border-radius: 2px;
     line-height: 1.35;
-    transition: width 0.2s ease;
+    transition: width 0.15s ease;
     word-break: break-word;
+    font-weight: 500;
 }
 
 /* Paper Sizes */
@@ -918,19 +862,19 @@ select:focus {
 
 /* Inline Edit Highlight */
 .inline-editable-active [contenteditable="true"] {
-    outline: 1px dashed #6366f1 !important;
-    background-color: rgba(99, 102, 241, 0.05);
+    outline: 1px dashed #2563eb !important;
+    background-color: rgba(37, 99, 235, 0.05);
     cursor: text;
     border-radius: 2px;
 }
 
 .inline-editable-active [contenteditable="true"]:focus {
-    outline: 2px solid #4f46e5 !important;
-    background-color: rgba(99, 102, 241, 0.12);
+    outline: 2px solid #2563eb !important;
+    background-color: rgba(37, 99, 235, 0.12);
 }
 
 /* ==========================================================================
-   TOAST NOTIFICATION
+   TOAST NOTIFICATION (CLEAN)
    ========================================================================== */
 .toast {
     position: fixed;
@@ -939,16 +883,13 @@ select:focus {
     background: #0f172a;
     color: #ffffff;
     padding: 10px 18px;
-    border-radius: var(--radius-md);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     font-size: 13px;
     font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
     z-index: 9999;
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
     transition: opacity 0.2s, transform 0.2s;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -965,7 +906,7 @@ select:focus {
 @media (max-width: 1024px) {
     .app-container {
         flex-direction: column;
-        padding: 16px 12px;
+        padding: 16px;
     }
 
     .editor-pane {
@@ -978,22 +919,22 @@ select:focus {
 }
 
 @media (max-width: 768px) {
-    .header-inner {
+    .header-main {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
-        padding: 10px 14px;
-    }
-
-    .header-controls {
-        width: 100%;
-        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px;
     }
 
     .header-actions {
         width: 100%;
         overflow-x: auto;
         padding-bottom: 4px;
+    }
+
+    .toolbar-inner {
+        padding: 8px 16px;
+        gap: 12px;
     }
 
     .mobile-tab-bar {
@@ -1020,54 +961,54 @@ select:focus {
    ATURAN CETAK FISIK (@media print)
    ========================================================================== */
 @media print {
+    * {
+        -webkit-font-smoothing: none !important;
+        -moz-osx-font-smoothing: unset !important;
+        font-smooth: never !important;
+        text-rendering: geometricPrecision !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
     html, body {
         background: transparent !important;
         margin: 0 !important;
         padding: 0 !important;
+        color: #000000 !important;
     }
 
-    /* Hilangkan semua elemen UI, header, editor, preview toolbar, background */
+    /* Hilangkan semua elemen UI */
     .no-print,
     .app-header,
     .editor-pane,
     .preview-toolbar,
-    .receipt-tear-top,
-    .receipt-tear-bottom,
     .toast {
         display: none !important;
     }
 
-    .app-container {
-        padding: 0 !important;
-        margin: 0 !important;
-        display: block !important;
-        width: 100% !important;
-    }
-
-    .preview-pane {
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: block !important;
-    }
-
-    .preview-sticky-wrap {
-        position: static !important;
-        width: 100% !important;
-    }
-
+    .app-container,
+    .preview-pane,
+    .preview-sticky-wrap,
     .receipt-wrapper {
         padding: 0 !important;
         margin: 0 !important;
+        display: block !important;
         width: 100% !important;
+        background: transparent !important;
+        border: none !important;
     }
 
     .receipt-paper {
         box-shadow: none !important;
         border-radius: 0 !important;
         color: #000000 !important;
+        background: #ffffff !important;
+        font-weight: 700 !important;
         box-sizing: border-box !important;
+    }
+
+    .receipt-paper * {
+        color: #000000 !important;
     }
 
     /* Kertas 58mm: Lebar cetak head fisik printer 58mm adalah 48mm */

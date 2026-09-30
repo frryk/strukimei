@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>POS</text></svg>">
     
     <!-- html2canvas untuk konversi HTML struk ke gambar PNG & print thermal bitmap -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -20,30 +20,48 @@
 </head>
 
 <body>
-    <!-- HEADER & TOOLBAR UTAMA -->
+    <!-- HEADER UTAMA (BARIS 1: JUDUL & TOMBOL AKSI UTAMA) -->
     <header class="no-print app-header">
-        <div class="header-inner">
+        <div class="header-main">
             <div class="brand">
-                <div class="brand-icon">🧾</div>
-                <div class="brand-info">
-                    <h1>Struk POS & IMEI</h1>
-                    <span class="badge-pro">PRO v2.0</span>
-                </div>
+                <h1 class="brand-title">Struk POS & IMEI</h1>
+                <span class="brand-subtitle">Generator Struk Kasir</span>
             </div>
 
-            <!-- Toolbar Kontrol Cepat -->
-            <div class="header-controls">
-                <div class="control-item">
+            <!-- Tombol Aksi Utama -->
+            <div class="header-actions">
+                <button id="btn-print" class="btn btn-primary" title="Cetak struk ke printer">
+                    Cetak Struk
+                </button>
+                <button id="btn-save-img" class="btn btn-secondary" title="Simpan sebagai file gambar PNG">
+                    Simpan PNG
+                </button>
+                <button id="btn-wa" class="btn btn-whatsapp" title="Kirim rincian struk ke WhatsApp pelanggan">
+                    Kirim WhatsApp
+                </button>
+                <button id="btn-copy-text" class="btn btn-ghost" title="Salin format teks struk ke clipboard">
+                    Salin Teks
+                </button>
+                <button id="btn-reset" class="btn btn-ghost" title="Muat ulang data template default T-Mobile">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- BARIS 2: PENGATURAN CETAK & KERTAS -->
+        <div class="header-toolbar">
+            <div class="toolbar-inner">
+                <div class="control-group">
                     <label for="template-select">Template:</label>
                     <select id="template-select">
-                        <option value="tmobile-imei" selected>📱 T-Mobile / Handphone (IMEI)</option>
-                        <option value="modern-80">🏪 Struk Retail 80mm</option>
-                        <option value="standard-58">🧾 Struk Kasir 58mm</option>
-                        <option value="cafe-minimalist">☕ Struk Kafe / F&B</option>
+                        <option value="tmobile-imei" selected>T-Mobile / Handphone (IMEI)</option>
+                        <option value="modern-80">Retail 80mm</option>
+                        <option value="standard-58">Kasir Standar 58mm</option>
+                        <option value="cafe-minimalist">Kafe / Minimalis</option>
                     </select>
                 </div>
 
-                <div class="control-item">
+                <div class="control-group">
                     <label>Ukuran Kertas:</label>
                     <div class="segmented-control" id="paper-width-switch">
                         <button type="button" class="seg-btn" data-width="w-58">58mm</button>
@@ -51,43 +69,35 @@
                     </div>
                 </div>
 
-                <div class="control-item">
-                    <label for="connection-select">Metode Cetak:</label>
+                <div class="control-group">
+                    <label for="connection-select">Koneksi Printer:</label>
                     <select id="connection-select">
-                        <option value="system">🖨️ Dialog Cetak Sistem (PC/HP/Mac)</option>
-                        <option value="usb">🔌 Kabel USB Direct ESC/POS</option>
-                        <option value="bluetooth">📶 Bluetooth Direct ESC/POS</option>
+                        <option value="usb-text" selected>USB (Teks ESC/POS - Cepat & Tajam)</option>
+                        <option value="bluetooth-text">Bluetooth (Teks ESC/POS - Cepat & Tajam)</option>
+                        <option value="system">Dialog Cetak Sistem (PC / Mac / HP)</option>
+                        <option value="usb-graphic">USB (Mode Gambar HD)</option>
+                        <option value="bluetooth-graphic">Bluetooth (Mode Gambar HD)</option>
                     </select>
                 </div>
-            </div>
 
-            <!-- Tombol Aksi Utama -->
-            <div class="header-actions">
-                <button id="btn-print" class="btn btn-primary" title="Cetak struk ke printer">
-                    <span class="btn-icon">🖨️</span> Cetak Struk
-                </button>
-                <button id="btn-save-img" class="btn btn-secondary" title="Simpan sebagai file gambar PNG resolusi tinggi">
-                    <span class="btn-icon">📥</span> Simpan PNG
-                </button>
-                <button id="btn-wa" class="btn btn-whatsapp" title="Kirim rincian struk ke WhatsApp pelanggan">
-                    <span class="btn-icon">💬</span> Kirim WA
-                </button>
-                <button id="btn-copy-text" class="btn btn-ghost" title="Salin format teks struk ke clipboard">
-                    <span class="btn-icon">📋</span> Salin
-                </button>
-                <button id="btn-reset" class="btn btn-ghost" title="Muat ulang data template default T-Mobile">
-                    <span class="btn-icon">🔄</span> Reset
-                </button>
+                <div class="control-group">
+                    <label for="density-select">Kepekatan Cetak:</label>
+                    <select id="density-select">
+                        <option value="180">Normal</option>
+                        <option value="200" selected>Pekat (Tajam)</option>
+                        <option value="225">Ekstra Hitam</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <!-- Segmented Tab untuk Tampilan Mobile -->
         <div class="mobile-tab-bar">
             <button type="button" class="mobile-tab active" data-tab="editor">
-                ✏️ Form Edit Struk
+                Form Edit
             </button>
             <button type="button" class="mobile-tab" data-tab="preview">
-                👁️ Preview Struk
+                Preview Struk
             </button>
         </div>
     </header>
@@ -97,7 +107,7 @@
         <!-- PANEL FORMULIR EDITOR (KIRI) -->
         <section class="editor-pane" id="editor-pane">
             <div class="editor-header">
-                <h2>✏️ Editor Data Struk</h2>
+                <h2>Editor Data Struk</h2>
                 <div class="editor-header-actions">
                     <button type="button" id="btn-sample-tmobile" class="btn-sm btn-outline">
                         Gunakan Data Contoh T-Mobile
@@ -110,12 +120,10 @@
                 </div>
             </div>
 
-            <!-- ACCORDION / SECTIONS -->
             <!-- 1. INFORMASI TOKO -->
             <div class="editor-card">
                 <div class="card-title">
-                    <span class="card-icon">🏪</span>
-                    <h3>Informasi Toko & Header</h3>
+                    <h3>Informasi Toko</h3>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
@@ -136,7 +144,7 @@
                             <input type="text" id="input-address-1" placeholder="513 Bishan St. 13,">
                         </div>
                         <div class="form-group col-6">
-                            <label for="input-address-2">Alamat Baris 2 (Kota/Kode Pos)</label>
+                            <label for="input-address-2">Alamat Baris 2 (Kota / Kode Pos)</label>
                             <input type="text" id="input-address-2" placeholder="#01-502 Singapore 570513">
                         </div>
                     </div>
@@ -156,8 +164,7 @@
             <!-- 2. DETAIL TRANSAKSI -->
             <div class="editor-card">
                 <div class="card-title">
-                    <span class="card-icon">📄</span>
-                    <h3>Detail Nomor Faktur & Transaksi</h3>
+                    <h3>Detail Transaksi</h3>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
@@ -192,9 +199,8 @@
             <!-- 3. DAFTAR PRODUK & IMEI -->
             <div class="editor-card">
                 <div class="card-title-between">
-                    <div class="card-title">
-                        <span class="card-icon">📱</span>
-                        <h3>Produk, Spesifikasi & Daftar IMEI</h3>
+                    <div class="card-title-text">
+                        <h3>Daftar Produk & IMEI</h3>
                     </div>
                     <button type="button" id="btn-add-item" class="btn-sm btn-primary">
                         + Tambah Produk
@@ -210,7 +216,6 @@
             <!-- 4. PEMBAYARAN & PELANGGAN -->
             <div class="editor-card">
                 <div class="card-title">
-                    <span class="card-icon">💰</span>
                     <h3>Pembayaran & Pelanggan</h3>
                 </div>
                 <div class="card-body">
@@ -249,7 +254,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-12">
-                            <label for="input-customer-phone">No. WhatsApp Pelanggan (Untuk tombol Kirim WA)</label>
+                            <label for="input-customer-phone">No. WhatsApp Pelanggan (Untuk tombol Kirim WhatsApp)</label>
                             <input type="text" id="input-customer-phone" placeholder="Contoh: 6583766999 atau 08123456789">
                         </div>
                     </div>
@@ -259,13 +264,12 @@
             <!-- 5. FOOTER & PENGATURAN STRUK -->
             <div class="editor-card">
                 <div class="card-title">
-                    <span class="card-icon">⚙️</span>
-                    <h3>Footer & Pengaturan Barcode</h3>
+                    <h3>Pengaturan Tambahan & Barcode</h3>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
                         <div class="form-group col-12">
-                            <label for="input-footer-text">Teks Ucapan Terima Kasih (Footer)</label>
+                            <label for="input-footer-text">Teks Footer (Ucapan Terima Kasih)</label>
                             <input type="text" id="input-footer-text" placeholder="Thanks for The Purchase">
                         </div>
                     </div>
@@ -274,7 +278,7 @@
                             <label class="custom-checkbox">
                                 <input type="checkbox" id="check-show-barcode" checked>
                                 <span class="checkmark"></span>
-                                <strong>Cetak Barcode Batang Bill ID di bagian bawah struk</strong>
+                                <span>Cetak Barcode Batang Bill ID di bagian bawah struk</span>
                             </label>
                         </div>
                     </div>
@@ -288,29 +292,22 @@
                 <!-- Info Status Bar Preview -->
                 <div class="preview-toolbar no-print">
                     <div class="preview-meta">
-                        <span class="indicator-dot"></span>
-                        <span class="meta-label">Live Preview Struk</span>
-                        <span class="meta-badge" id="badge-paper-size">80mm Paper</span>
+                        <span class="meta-label">Preview Struk</span>
+                        <span class="meta-badge" id="badge-paper-size">80mm</span>
                     </div>
                     <div class="preview-controls">
-                        <button type="button" id="btn-quick-print" class="btn-xs btn-primary" title="Cetak langsung struk">
-                            🖨️ Cetak
+                        <button type="button" id="btn-quick-print" class="btn-xs btn-primary" title="Cetak langsung">
+                            Cetak
                         </button>
                     </div>
                 </div>
 
                 <!-- ALAS KERTAS STRUK THERMAL -->
                 <div class="receipt-wrapper">
-                    <!-- Gerigi Kertas Atas (Tear Top) -->
-                    <div class="receipt-tear-top no-print"></div>
-
                     <!-- ELEMEN STRUK UTAMA -->
                     <div id="receipt-container" class="receipt-paper w-80">
                         <!-- Diisi secara dinamis oleh app.js -->
                     </div>
-
-                    <!-- Gerigi Kertas Bawah (Tear Bottom) -->
-                    <div class="receipt-tear-bottom no-print"></div>
                 </div>
             </div>
         </section>

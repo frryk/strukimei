@@ -1017,35 +1017,45 @@ class ThermalPrinter {
     async write(data) {
         if (this.connectionType === 'bluetooth') {
             if (!this.characteristic) return;
-            const CHUNK_SIZE = 100;
+            // Gunakan writeValueWithoutResponse jika didukung untuk transfer berkecepatan tinggi
+            const canWriteFast = !!this.characteristic.properties.writeWithoutResponse;
+            const CHUNK_SIZE = canWriteFast ? 128 : 100;
+            const delayMs = canWriteFast ? 6 : 15;
+
             for (let i = 0; i < data.length; i += CHUNK_SIZE) {
-                const chunk = data.slice(i, i + CHUNK_SIZE);
+                const chunk = new Uint8Array(data.slice(i, i + CHUNK_SIZE));
                 try {
-                    await this.characteristic.writeValue(new Uint8Array(chunk));
+                    if (canWriteFast) {
+                        await this.characteristic.writeValueWithoutResponse(chunk);
+                    } else {
+                        await this.characteristic.writeValue(chunk);
+                    }
                 } catch (e) {
-                    console.warn('BT write retry...', e);
-                    await new Promise(r => setTimeout(r, 50));
-                    await this.characteristic.writeValue(new Uint8Array(chunk));
+                    console.warn('BT write fallback...', e);
+                    await new Promise(r => setTimeout(r, 25));
+                    await this.characteristic.writeValue(chunk);
                 }
-                await new Promise(r => setTimeout(r, 25));
+                if (delayMs > 0) {
+                    await new Promise(r => setTimeout(r, delayMs));
+                }
             }
         } else if (this.connectionType === 'usb') {
             // Web Serial (USB-to-Serial adapter)
             if (!this.port) return;
             const writer = this.port.writable.getWriter();
             try {
-                const CHUNK_SIZE = 1024;
+                const CHUNK_SIZE = 2048;
                 for (let i = 0; i < data.length; i += CHUNK_SIZE) {
                     await writer.write(new Uint8Array(data.slice(i, i + CHUNK_SIZE)));
-                    await new Promise(r => setTimeout(r, 10));
+                    await new Promise(r => setTimeout(r, 5));
                 }
             } finally {
                 writer.releaseLock();
             }
         } else if (this.connectionType === 'usb-direct') {
-            // WebUSB â€” kirim langsung ke bulk OUT endpoint
+            // WebUSB — kirim langsung ke bulk OUT endpoint
             if (!this.usbDevice || !this.usbEndpointOut) return;
-            const CHUNK_SIZE = 16384; // 16 KB per transfer (bulk USB bisa besar)
+            const CHUNK_SIZE = 16384; // 16 KB per transfer (bulk USB)
             for (let i = 0; i < data.length; i += CHUNK_SIZE) {
                 const chunk = new Uint8Array(data.slice(i, i + CHUNK_SIZE));
                 const result = await this.usbDevice.transferOut(this.usbEndpointOut.endpointNumber, chunk);
@@ -1057,10 +1067,19 @@ class ThermalPrinter {
         }
     }
 
-    async printImage(canvas) {
+    async printCommands(commands) {
         if (!this.connectionType) {
             alert('Printer not connected!');
-            return;
+            return false;
+        }
+        await this.write(commands);
+        return true;
+    }
+
+    async printImage(canvas, threshold = 195) {
+        if (!this.connectionType) {
+            alert('Printer not connected!');
+            return false;
         }
 
         const ctx = canvas.getContext('2d');
@@ -1068,12 +1087,10 @@ class ThermalPrinter {
         const height = canvas.height;
         const imgData = ctx.getImageData(0, 0, width, height);
 
-        // No global processing here, because the photos are already processed individually
-        // before being drawn onto the canvas, keeping frames and text pristine.
-
-        const commands = this.generateESCPOS(imgData.data, width, height);
+        const commands = this.generateESCPOS(imgData.data, width, height, threshold);
 
         await this.write(commands);
+        return true;
     }
 
     simulatePrint(canvas) {
@@ -1096,9 +1113,7 @@ class ThermalPrinter {
         ctx.putImageData(imgData, 0, 0);
     }
 
-
-
-    generateESCPOS(pixels, width, height) {
+    generateESCPOS(pixels, width, height, threshold = 195) {
         let data = [0x1B, 0x40];
         data.push(0x1B, 0x61, 0x01);
 
@@ -1114,9 +1129,11 @@ class ThermalPrinter {
                     const px = x * 8 + b;
                     if (px < width) {
                         const idx = (y * width + px) * 4;
-                        // Threshold 128: foto sudah ter-dither B&W oleh ThermalProcessor.
-                        // Gunakan 128 standar agar pixel putih (255) tidak salah dicetak.
-                        if (pixels[idx] < 128) {
+                        // Hitung grayscale luminance (R*0.299 + G*0.587 + B*0.114)
+                        const gray = pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114;
+                        // Threshold cerdas: jika abu-abu / hitam (< threshold), jadikan dot hitam solid!
+                        // Ini membuat huruf anti-aliased tercetak tebal, pekat, dan tajam (tidak kabur/putus-putus)
+                        if (gray < threshold) {
                             byte |= (1 << (7 - b));
                         }
                     }
